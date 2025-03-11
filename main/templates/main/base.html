@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .follow-button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .follow-button:not(.following) {
+            background-color: #3897f0;
+            color: white;
+            border: 1px solid #3897f0;
+        }
+        
+        .follow-button.following {
+            background-color: white;
+            color: #262626;
+            border: 1px solid #dbdbdb;
+        }
+        
+        .follow-button:hover:not(.following) {
+            background-color: #1877f2;
+        }
+        
+        .follow-button.following:hover {
+            background-color: #ffeded;
+            color: #ed4956;
+            border-color: #ed4956;
+        }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+        <form action="{% url 'logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+            <a href="/">Home</a>
+        </form>
+        {% block content %}{% endblock content %}
+    {% else %}
+        <a href="/login">Login</a>
+        <a href="/register">Sign up</a>
+    {% endif %}
+</body>
+</html>

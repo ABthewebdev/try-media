@@ -1,0 +1,1 @@
+A user can create as many posts, comments, likes, and people to follow as they want. Create a profile for each user that allows any user to follow them, a bio, and allows them to create any number of posts. A post should have an author, title, textfield, number of likes, number of comments. A comment should have an author, textfield, and number of likes.

@@ -1,0 +1,80 @@
+<!-- profiles/profile.html -->
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="profile-container">
+    <div><h1>{{ profile.user.username }} </h1><button>Create post</button></div>
+    
+    <div class="profile-info">
+        <p>{{ profile.bio }}</p>
+        
+        <div class="profile-stats">
+            <span id="followers-count">Followers: {{ profile.get_followers_count }}</span>
+            <span>Following: {{ profile.get_following_count }}</span>
+        </div>
+        
+        {% if user.is_authenticated and user != profile.user %}
+            <button 
+                id="follow-btn" 
+                class="follow-button {% if is_following %}following{% endif %}"
+                data-profile-id="{{ profile.id }}"
+                data-csrf="{{ csrf_token }}"
+            >
+                {% if is_following %}
+                    Unfollow
+                {% else %}
+                    Follow
+                {% endif %}
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const followBtn = document.getElementById('follow-btn');
+    const h1 = document.querySelector('h1')
+    
+    if (followBtn) {
+        followBtn.addEventListener('click', function() {
+            const profileId = this.dataset.profileId;
+            const csrfToken = this.dataset.csrf;
+            
+            fetch(`/profile/follow/${profileId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update button text and class
+                    if (data.is_following) {
+                        followBtn.textContent = 'Unfollow';
+                        followBtn.classList.add('following');
+                    } else {
+                        followBtn.textContent = 'Follow';
+                        followBtn.classList.remove('following');
+                    }
+                    
+                    // Update followers count
+                    document.getElementById('followers-count').textContent = 
+                        `Followers: ${data.followers_count}`;
+                } else {
+                    console.error(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    }
+});
+</script>
+{% endblock %}
+
+{% endblock %}
