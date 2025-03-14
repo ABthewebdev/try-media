@@ -1,8 +1,17 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<h1>home</h1>
-<a href="/profile/alex">Alex</a>
-<a href="/profile/grant">Grant</a>
-<a href="/profile/matt">Matt</a>
+<div class="flex justify-between relative">
+    <div class="">
+        <h1>home</h1>
+    </div>
+    <div class="">
+        <h1>People</h1>
+        {% for thisUser in context.users %}
+            <div>
+                <p>{{thisUser.username}}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock content %}

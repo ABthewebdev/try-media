@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Profile(models.Model):
@@ -24,20 +25,19 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField(max_length=500)
     likes = models.ManyToManyField(User, related_name='liked', blank=True)
-    comments = models.ManyToManyField(User, related_name='commented', blank=True)
-
-    def likes_post(self):
-        return f"{self.author.username} likes this post"
+    created_at = models.DateTimeField(default=timezone.now)
     
     def get_likes(self):
-        return Post.objects.filter(likes=self.user).count()
+        return self.likes.count()
     
     def get_comments(self):
         return self.comments.count()
     
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, default=1)
     text = models.TextField(max_length=300)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.author.username} commented"

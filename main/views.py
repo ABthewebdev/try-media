@@ -1,20 +1,28 @@
-from .models import Profile
+from .models import Profile, Post
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from .forms import CreatePost
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
-    return render(request, 'main/home.html', {})
+    context = {
+        "users": User.objects.all(),
+        "profiles": Profile.objects.all()
+    }
+    return render(request, 'main/home.html', {"context": context})
 
 @login_required
 def profile(request, username):
     profile = get_object_or_404(Profile, user__username=username)
     is_following = profile.is_followed_by(request.user)
+    author = User.objects.get(username = username)
     
     context = {
         'profile': profile,
         'is_following': is_following,
+        'author': author
     }
     return render(request, 'users/profile.html', context)
 
@@ -42,3 +50,27 @@ def follow_toggle(request, profile_id):
         })
     
     return JsonResponse({'status': 'error', 'message': 'Invalid request'})
+
+def post(request, username, post_id):
+    author = User.objects.get(username = username)
+    post = author.post_set.get(id = post_id)
+    comment = ''
+    context = {
+        "author": author,
+        "post": post,
+        "comment": comment
+    }
+    return render(request, 'main/post.html', context)
+
+def create(request):
+    author = request.user
+    if request.method == 'POST':
+        form = CreatePost(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            text = form.cleaned_data['text']
+            post = Post(author = author, title = title, text = text)
+            post.save()
+    else:
+        form = CreatePost()
+    return render(request, 'main/create.html', {"form": form})

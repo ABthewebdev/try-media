@@ -3,7 +3,12 @@
 
 {% block content %}
 <div class="profile-container">
-    <div><h1>{{ profile.user.username }} </h1><button>Create post</button></div>
+    <div>
+        <h1>{{ profile.user.username }} </h1>
+        {% if profile.user.username == user.username %}
+            <a href="/create">Create post</a>
+        {% endif %}
+    </div>
     
     <div class="profile-info">
         <p>{{ profile.bio }}</p>
@@ -28,6 +33,18 @@
             </button>
         {% endif %}
     </div>
+    <section>
+        <h2>{{profile.user.username}}'s Posts</h2>
+        {% for post in profile.user.post_set.all %}
+            <a href="/{{user.username}}/{{post.id}}">
+                <article>
+                    <span>{{post.title}}</span>
+                    <span>{{post.text}}</span>
+                    <span>{{post.likes.count}} likes</span>
+                </article>
+            </a>
+        {% endfor %}
+    </section>
 </div>
 
 {% block extra_js %}

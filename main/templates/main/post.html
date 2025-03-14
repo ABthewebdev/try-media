@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<section>
+    <h1>{{author}}</h1>
+    <p>{{post.title}}</p>
+    <p>{{post.text}}</p>
+    <p>{{post.likes.count}} likes</p>
+    <section>
+        <h3>{{post.comments.count}} comments</h3>
+        <div>
+            <form action="" method="get">
+                {{comment}}
+            </form>
+        </div>
+    </section>
+</section>
+{% endblock content %}
