@@ -7,6 +7,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     followers = models.ManyToManyField(User, related_name='following', blank=True)
+    picture = models.ImageField(upload_to="profile_pics", default="default_picture.jpg")
 
     def __str__(self):
         return f"{self.user.username}'s profile"
@@ -25,6 +26,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     text = models.TextField(max_length=500)
     likes = models.ManyToManyField(User, related_name='liked', blank=True)
+    imageSrc = models.CharField(max_length=255, default=None, blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
     
     def get_likes(self):

@@ -1,15 +1,17 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<div class="flex justify-between relative">
-    <div class="">
+<div class="flex justify-between">
+    <div>
         <h1>home</h1>
     </div>
-    <div class="">
+    <div>
         <h1>People</h1>
         {% for thisUser in context.users %}
             <div>
-                <p>{{thisUser.username}}</p>
+                <a href="/profile/{{thisUser.username}}">
+                    <p>{{thisUser.username}}</p>
+                </a>
             </div>
         {% endfor %}
     </div>

@@ -9,27 +9,35 @@
 </head>
 <body>
     {% if user.is_authenticated %}
-    <header class="flex justify-between">
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
+    <header class="flex fixed width-full justify-between">
+        <img class="open-sidebar" src="{% static 'img/icons8-menu.svg' %}" alt="menu" height="40px" width="40px" />
+        <form>
+            <input type="search" name="search" id="search" placeholder="Search" />
         </form>
-        <a href="/">Home</a>
-        <div>
-            <a href="/profile/{{user.username}}">My profile</a>
-        </div>
+        <div id="whitespace"></div>
     </header>
-    <div class="flex z-index-10 height-vh border-black">
+    <div class="sidebar">
         <ul>
+            <li class="profile-li">
+                <a href="/profile/{{user.username}}">Profile</a>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Logout</button>
+                </form>
+            </li>
             <li>Home</li>
             <li>Settings</li>
             <li>Posts</li>
         </ul>
+        <img class="close-sidebar" src="{% static 'img/icon-close.svg' %}" alt="exit" height="40px" width="40px" />
     </div>
-    {% block content %}{% endblock content %}
+    <main id="main" class="height-1000 mt-20">
+        {% block content %}{% endblock content %}
+    </main>
     {% else %}
         <a href="/login">Login</a>
         <a href="/register">Sign up</a>
-    {% endif %}
-</body>
+        {% endif %}
+        <script src="{% static 'js/main.js' %}"></script>
+    </body>
 </html>
